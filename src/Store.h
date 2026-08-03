@@ -1,5 +1,7 @@
 #ifndef STORE_H
 #define STORE_H
+#include <array>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <optional>
@@ -32,7 +34,33 @@ public:
     bool del(const std::string& key);
 
 private:
-    std::unordered_map<std::string, std::string> storage;
+    /* Creating Sharding support for read access */
+
+    /** creating a limit on how many shards can be accessed at time */
+    static constexpr size_t SHARDS = 16;
+
+    /** struct for handling shards */
+    struct Shard
+    {
+        mutable std::mutex mutex_;
+        std::unordered_map<std::string, std::string> storage_;
+    };
+
+    std::array<Shard, SHARDS> shards_;
+
+    /**
+     * looking informations within a shards
+     * @param key instance searching within the decentralized shard containers
+     * @return the value that key holds in container
+     */
+    Shard& shard_for(const std::string& key);
+
+    /**
+     * looking information within a shards just as static function
+     * @param key instance searching within the decentralized shard containers
+     * @return the value that key holds in container
+     */
+    const Shard& shard_for(const std::string& key) const;
 };
 
 #endif //STORE_H
