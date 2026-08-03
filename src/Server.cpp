@@ -3,6 +3,9 @@
 //
 
 #include "Server.h"
+
+#include <algorithm>
+
 #include "Parser.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
