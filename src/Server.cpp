@@ -13,7 +13,7 @@
 #include <iostream>
 
 Server::Server(int port, Store &store)
-    : port_(port), server_fd_(-1), store_(store) {}
+    : port_(port), server_fd_(-1), store_(store), thread_() {}
 
 Server::~Server() {
     if (server_fd_ != -1) {
@@ -60,8 +60,13 @@ void Server::run() {
         }
 
         // handle client
-        handle_client(client_fd);
-        close(client_fd);
+        // handle client
+        thread_.enqueue([client_fd, this]()
+        {
+            handle_client(client_fd);
+            close(client_fd);
+        });
+
     }
 
 }

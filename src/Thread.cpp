@@ -4,7 +4,7 @@
  * Description:
  */
 
-#include "thread.h"
+#include "Thread.h"
 
 namespace count
 {

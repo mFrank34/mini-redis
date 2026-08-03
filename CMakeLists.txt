@@ -14,8 +14,8 @@ add_executable(key_store
         src/Parser.h
         src/Wal.cpp
         src/Wal.h
-        src/thread.cpp
-        src/thread.h
+        src/Thread.cpp
+        src/Thread.h
 )
 
 find_package(Threads REQUIRED)

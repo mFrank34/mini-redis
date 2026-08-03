@@ -3,6 +3,7 @@
 //
 
 #include "Store.h"
+#include "Thread.h"
 
 #ifndef SERVER_H
 #define SERVER_H
@@ -19,6 +20,7 @@ private:
     int port_;
     int server_fd_;
     Store& store_;
+    Thread thread_;
 
     void handle_client(int client_fd) const;
 };
