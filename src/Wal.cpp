@@ -3,3 +3,8 @@
 //
 
 #include "Wal.h"
+
+Wal::Wal(std::string& path)
+{
+
+}

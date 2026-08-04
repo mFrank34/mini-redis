@@ -2,12 +2,25 @@
 // Created by frank on 02/08/2026.
 //
 
-#ifndef KEY_STORE_WAL_H
-#define KEY_STORE_WAL_H
+#ifndef WAL_H
+#define WAL_H
+
+#include <string>
 
 
 class Wal {
+public:
+    Wal(std::string &path);
+    void save();
+    void load();
+
+private:
+    bool read();
+    bool write();
+
+    std::string path = "log.txt";
+
 };
 
 
-#endif //KEY_STORE_WAL_H
+#endif //WAL_H
