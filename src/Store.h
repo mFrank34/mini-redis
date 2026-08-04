@@ -6,7 +6,8 @@
 #include <unordered_map>
 #include <optional>
 
-class Store {
+class Store
+{
 public:
     Store() = default;
     ~Store() = default;
@@ -33,6 +34,18 @@ public:
      */
     bool del(const std::string& key);
 
+    /**
+     * take an input to populate the key register
+     * @param data data loaded from file
+     */
+    void load(const std::unordered_map<std::string, std::string>& data);
+
+    /**
+     * system design to create a snap shot of memory register
+     * @return returns file ready to exported
+     */
+    std::unordered_map<std::string, std::string> save();
+
 private:
     /* Creating Sharding support for read access */
 
@@ -49,7 +62,7 @@ private:
     std::array<Shard, SHARDS> shards_;
 
     /**
-     * looking informations within a shards
+     * looking information within a shards
      * @param key instance searching within the decentralized shard containers
      * @return the value that key holds in container
      */
