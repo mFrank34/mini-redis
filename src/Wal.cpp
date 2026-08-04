@@ -4,7 +4,7 @@
 
 #include "Wal.h"
 
-#include <fstream>wha
+#include <fstream>
 #include <valarray>
 #include <vector>
 
