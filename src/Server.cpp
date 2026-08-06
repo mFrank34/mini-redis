@@ -33,7 +33,7 @@ Server::~Server()
         snapshot_thread_.join();
     }
 
-    wal_.write(store_.save()); // final snapshot on clean shutdown
+    wal_.write(store_.save());
 }
 
 

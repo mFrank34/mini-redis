@@ -17,11 +17,32 @@ extern std::atomic<bool> shutdown_requested;
 class Server
 {
 public:
+    /**
+     * Application Start sections.
+     * @param port application access port.
+     * @param store in memory storage system.
+     */
     Server(int port, Store& store);
+
+    /**
+     * Server Destroyer shuts down server safely with collecting threads
+     * and shutting down server.
+     */
     ~Server();
 
+    /**
+     * Main run time of serve handling server actions and calls.
+     */
     void run();
+
+    /**
+     * script to hand loading from cold storage on boot.
+     */
     void load() const;
+
+    /**
+     * System design to create a snapshot of memory storage container.
+     */
     void snapshot();
 
 private:
@@ -37,6 +58,11 @@ private:
     std::condition_variable snapshot_cv_;
     std::thread snapshot_thread_;
 
+    /**
+     * System designed to hand a client request
+     * while being able to thread across threads.
+     * @param client_fd client id on request.
+     */
     void handle_client(int client_fd) const;
 };
 
