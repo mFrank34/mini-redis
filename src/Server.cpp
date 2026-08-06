@@ -46,6 +46,13 @@ void Server::run()
         return;
     }
 
+    int opt = 1;
+    if (setsockopt(server_fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+    {
+        std::cerr << "set socket failed\n";
+        return;
+    }
+
     sockaddr_in address{};
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
@@ -72,23 +79,31 @@ void Server::run()
 
     while (!shutdown_requested)
     {
+        fd_set read_fds;
+        FD_ZERO(&read_fds);
+        FD_SET(server_fd_, &read_fds);
+        timeval tv{1, 0}; // 1 second timeout
+
+        int ready = select(server_fd_ + 1, &read_fds, nullptr, nullptr, &tv);
+        if (ready <= 0)
+        {
+            continue; // timeout or error — loop back and recheck shutdown_requested
+        }
+
         sockaddr_in client{};
         socklen_t client_len = sizeof(client);
-
         int client_fd = accept(server_fd_, (sockaddr*)&client, &client_len);
         if (client_fd < 0)
         {
             std::cerr << "Accept failed\n";
             continue;
         }
-
         thread_.enqueue([client_fd, this]()
         {
             handle_client(client_fd);
             close(client_fd);
         });
     }
-    std::cout << "Shutting down...\n";
 }
 
 void Server::load() const
@@ -99,6 +114,8 @@ void Server::load() const
 void Server::snapshot()
 {
     std::unique_lock<std::mutex> lock(snapshot_mutex_);
+
+    if (!running_) { return; }
 
     while (running_)
     {

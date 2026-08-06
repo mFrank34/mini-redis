@@ -4,7 +4,7 @@ project(mini-redis)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(key_store
+add_executable(mini-redis
         src/Main.cpp
         src/Server.cpp
         src/Server.h
@@ -19,4 +19,4 @@ add_executable(key_store
 )
 
 find_package(Threads REQUIRED)
-target_link_libraries(key_store PRIVATE Threads::Threads)
+target_link_libraries(mini-redis PRIVATE Threads::Threads)
