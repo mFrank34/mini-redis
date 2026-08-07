@@ -1,7 +1,7 @@
 /*
  * File: Broadcast
  * Author: Michael Franks 
- * Description:
+ * Description: system to broadcast messaged to connected clients
  */
 
 #ifndef BROADCAST_H
@@ -17,24 +17,25 @@
 class Broadcast
 {
 public:
+
     /**
-     *
-     * @param channel
-     * @param fd
+     * Allows for application to subscript to channel for communications.
+     * @param channel selected channel for communications.
+     * @param fd id number for channel.
      */
     void subscribe(const std::string& channel, int fd);
 
     /**
-     *
-     * @param fd
+     * unsubscribe from a channel.
+     * @param fd the id for that channel.
      */
     void unsubscribe(int fd);
 
     /**
-     *
-     * @param channel
-     * @param message
-     * @return
+     * send messaged to connected clients on a channel.
+     * @param channel selected peers.
+     * @param message message to send.
+     * @return amount of successes messages.
      */
     int publish(const std::string& channel, const std::string& message);
 
@@ -44,9 +45,9 @@ private:
     std::unordered_map<int, std::shared_ptr<std::mutex>> write_mutexes_;
 
     /**
-     *
-     * @param fd
-     * @return
+     * limited system to protected reads and writes on data.
+     * @param fd id to free up write and reads from.
+     * @return id to write too.
      */
     std::shared_ptr<std::mutex> write_mutex(int fd);
 };

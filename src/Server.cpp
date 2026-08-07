@@ -196,13 +196,20 @@ void Server::handle_client(int client_fd)
         }
         else if (cmd.command == "PUBLISH")
         {
-            if (cmd.arguments.size() != 2)
+            if (cmd.arguments.size() < 2)
             {
                 response = "Invalid command use of PUBLISH";
             }
             else
             {
-                int n = broadcast_.publish(cmd.arguments[0], cmd.arguments[1]);
+                const std::string& channel = cmd.arguments[0];
+                std::string message;
+                for (size_t i = 1; i < cmd.arguments.size(); ++i)
+                {
+                    if (i > 1) message += ' ';
+                    message += cmd.arguments[i];
+                }
+                int n = broadcast_.publish(channel, message);
                 response = "OK delivered to " + std::to_string(n);
             }
         }

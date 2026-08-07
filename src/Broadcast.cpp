@@ -55,7 +55,7 @@ int Broadcast::publish(const std::string& channel, const std::string& message)
         }
     }
 
-    std::string payload = "MESSAGE" + channel + " " + message + "\n";
+    std::string payload = "MESSAGE " + channel + " " + message + "\n";
     int delivered = 0;
     for (size_t i = 0; i < targets.size(); i++)
     {
