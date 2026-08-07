@@ -131,61 +131,93 @@ void Server::snapshot()
     }
 }
 
-void Server::handle_client(int client_fd) const
+void Server::handle_client(int client_fd)
 {
     char buffer[1024];
-    ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) - 1);
 
-    if (bytes_read <= 0)
+    while (true)
     {
-        return;
-    }
-
-    std::string line(buffer, bytes_read);
-    Command cmd = parse(line);
-    std::string response;
-
-    if (cmd.command == "SET")
-    {
-        if (cmd.arguments.size() != 2)
+        ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) - 1);
+        if (bytes_read <= 0)
         {
-            response = "Invalid command use of SET";
+            break; // client disconnected or read error
+        }
+
+        std::string line(buffer, bytes_read);
+        Command cmd = parse(line);
+        std::string response;
+
+        if (cmd.command == "SET")
+        {
+            if (cmd.arguments.size() != 2)
+            {
+                response = "Invalid command use of SET";
+            }
+            else
+            {
+                store_.set(cmd.arguments[0], cmd.arguments[1]);
+                response = "OK";
+            }
+        }
+        else if (cmd.command == "GET")
+        {
+            if (cmd.arguments.size() != 1)
+            {
+                response = "Invalid command use of GET";
+            }
+            else
+            {
+                auto val = store_.get(cmd.arguments[0]);
+                response = (val ? *val : "(nil)");
+            }
+        }
+        else if (cmd.command == "DEL")
+        {
+            if (cmd.arguments.size() != 1)
+            {
+                response = "Invalid command use of DEL";
+            }
+            else
+            {
+                response = (store_.del(cmd.arguments[0]) ? "OK" : "(nil)");
+            }
+        }
+        else if (cmd.command == "SUBSCRIBE")
+        {
+            if (cmd.arguments.size() != 1)
+            {
+                response = "Invalid command use of SUBSCRIBE";
+            }
+            else
+            {
+                broadcast_.subscribe(cmd.arguments[0], client_fd);
+                response = "OK subscribed to " + cmd.arguments[0];
+            }
+        }
+        else if (cmd.command == "PUBLISH")
+        {
+            if (cmd.arguments.size() != 2)
+            {
+                response = "Invalid command use of PUBLISH";
+            }
+            else
+            {
+                int n = broadcast_.publish(cmd.arguments[0], cmd.arguments[1]);
+                response = "OK delivered to " + std::to_string(n);
+            }
         }
         else
         {
-            store_.set(cmd.arguments[0], cmd.arguments[1]);
-            response = "OK";
+            response = "Invalid command";
         }
-    }
-    else if (cmd.command == "GET")
-    {
-        if (cmd.arguments.size() != 1)
+
+        response += '\n';
+        ssize_t written = write(client_fd, response.c_str(), response.length());
+        if (written <= 0)
         {
-            response = "Invalid command use of GET";
+            break; // client's gone, stop trying to talk to it
         }
-        else
-        {
-            auto val = store_.get(cmd.arguments[0]);
-            response = (val ? *val : "(nil)");
-        }
-    }
-    else if (cmd.command == "DEL")
-    {
-        if (cmd.arguments.size() != 1)
-        {
-            response = "Invalid command use of DEL";
-        }
-        else
-        {
-            response = (store_.del(cmd.arguments[0]) ? "OK" : "(nil)");
-        }
-    }
-    else
-    {
-        response = "Invalid command";
     }
 
-    // adding new line before writing
-    response += '\n';
-    write(client_fd, response.c_str(), response.length());
+    broadcast_.unsubscribe(client_fd); // cleanup regardless of why we exited
 }

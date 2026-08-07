@@ -37,7 +37,7 @@ private:
     static std::pair<std::string, std::string> splitLine(const std::string& line);
 
     std::string path = "log.txt";
-    static constexpr char DELIM = '\x1F';
+    static constexpr char DELIM = '=';
     mutable std::mutex mutex_;
 };
 

@@ -7,10 +7,13 @@
 #include "Store.h"
 #include "Thread.h"
 #include "Wal.h"
+
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
+
+#include "Broadcast.h"
 
 extern std::atomic<bool> shutdown_requested;
 
@@ -48,9 +51,11 @@ public:
 private:
     int port_;
     int server_fd_;
+
     Store& store_;
     Thread thread_;
     Wal wal_;
+    Broadcast broadcast_;
 
     /* snapshot capture system to save around 60 seconds */
     std::atomic<bool> running_;
@@ -63,7 +68,7 @@ private:
      * while being able to thread across threads.
      * @param client_fd client id on request.
      */
-    void handle_client(int client_fd) const;
+    void handle_client(int client_fd);
 };
 
 #endif //SERVER_H

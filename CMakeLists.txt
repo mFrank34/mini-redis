@@ -16,6 +16,8 @@ add_executable(mini-redis
         src/Wal.h
         src/Thread.cpp
         src/Thread.h
+        src/Broadcast.cpp
+        src/Broadcast.h
 )
 
 find_package(Threads REQUIRED)
