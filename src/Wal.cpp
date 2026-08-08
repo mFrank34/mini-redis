@@ -9,6 +9,11 @@
 #include <vector>
 
 
+Wal::Wal(std::string path)
+    : path(std::move(path))
+{
+}
+
 std::unordered_map<std::string, std::string> Wal::read() const
 {
     std::lock_guard<std::mutex> lock(mutex_);

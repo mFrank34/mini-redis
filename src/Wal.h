@@ -13,7 +13,7 @@
 class Wal
 {
 public:
-    Wal() = default;
+    explicit Wal(std::string path = "log.txt");
     ~Wal() = default;
 
     /**

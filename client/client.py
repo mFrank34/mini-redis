@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import socket
-import threading
 import sys
+import threading
+
 
 class Client:
     def __init__(self, host="127.0.0.1", port=8080):

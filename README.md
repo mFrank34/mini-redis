@@ -17,7 +17,7 @@ redis with different design with less complexity.
 - Threaded ability for handling multi-able request
 - Sharded memory design for helping threading support and read and writes speed.
 - Built-in broadcast features for sending messages to sender and receivers.
-- **Being Built a Memory Limits**
+- Memory limitor to shard memory types, with around 10,000 records per shard.
 
 ## File Description
 - client : python test scripts and client access scripts.
@@ -31,6 +31,8 @@ redis with different design with less complexity.
 - Parser : small system design to break down requesting small parts for processing.
 - Threads: a Threaded pool for application to break tasked down into parts across threads.
 - Wal : Write-ahead log for storing keys and metadata in long term storage.
+
+
 
 ### Authors
 - Michael Franks
