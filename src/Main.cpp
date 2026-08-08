@@ -18,7 +18,7 @@ int main()
 {
     std::signal(SIGINT, signal_handler);
 
-    Store store;
+    Store store(10000);
     Server server(8080, store);
     server.run();
     return 0;

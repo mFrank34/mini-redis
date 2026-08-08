@@ -1,6 +1,7 @@
 #ifndef STORE_H
 #define STORE_H
 #include <array>
+#include <list>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -9,7 +10,7 @@
 class Store
 {
 public:
-    Store() = default;
+    explicit Store(size_t max_entries);
     ~Store() = default;
 
     /**
@@ -55,8 +56,16 @@ private:
     /** struct for handling shards */
     struct Shard
     {
+        struct Node
+        {
+            std::string key;
+            std::string value;
+        };
+
         mutable std::mutex mutex_;
-        std::unordered_map<std::string, std::string> storage_;
+        std::list<Node> lru_list_;
+        std::unordered_map<std::string, std::list<Node>::iterator> storage_;
+        size_t max_entries_;
     };
 
     std::array<Shard, SHARDS> shards_;

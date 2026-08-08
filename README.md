@@ -16,8 +16,8 @@ redis with different design with less complexity.
 - Stores request as key and data (Key: string,data: string)
 - Threaded ability for handling multi-able request
 - Sharded memory design for helping threading support and read and writes speed.
-- **More being built**
-
+- Built-in broadcast features for sending messages to sender and receivers.
+- **Being Built a Memory Limits**
 
 ## File Description
 - client : python test scripts and client access scripts.
