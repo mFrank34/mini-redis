@@ -34,12 +34,17 @@ FetchContent_MakeAvailable(Catch2)
 # --- test executable ---
 add_executable(tests
     tests/test_store.cpp
+    tests/test_parser.cpp
+    tests/test_wal.cpp
+    tests/test_thread.cpp
     src/Store.cpp
     src/Store.h
     src/Wal.cpp
     src/Wal.h
     src/Parser.cpp
     src/Parser.h
+    src/Thread.cpp
+    src/Thread.h
 )
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain Threads::Threads)
 
