@@ -32,7 +32,8 @@ redis with different design with less complexity.
 - Threads: a Threaded pool for application to break tasked down into parts across threads.
 - Wal : Write-ahead log for storing keys and metadata in long term storage.
 
-
+### End of Mini Project
+- 8th of August 2026
 
 ### Authors
 - Michael Franks
