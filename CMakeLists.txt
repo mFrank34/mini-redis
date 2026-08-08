@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
-project(key_store)
-
+project(mini-redis)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# --- main executable (unchanged) ---
-add_executable(key_store
-    src/main.cpp
+# --- main executable ---
+add_executable(mini-redis
+    src/Main.cpp
     src/Server.cpp
     src/Server.h
     src/Store.cpp
@@ -17,10 +16,11 @@ add_executable(key_store
     src/Wal.h
     src/Thread.cpp
     src/Thread.h
+    src/Broadcast.cpp
+    src/Broadcast.h
 )
-
 find_package(Threads REQUIRED)
-target_link_libraries(key_store PRIVATE Threads::Threads)
+target_link_libraries(mini-redis PRIVATE Threads::Threads)
 
 # --- Catch2 ---
 include(FetchContent)
@@ -48,7 +48,6 @@ add_executable(tests
 )
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain Threads::Threads)
 
-# lets CTest discover and run each Catch2 TEST_CASE individually
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(CTest)
 include(Catch)
